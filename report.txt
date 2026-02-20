@@ -1,0 +1,47 @@
+NLP to SQL Converter
+
+Overview
+This project implements a rule-based Natural Language to SQL converter for a dedicated employee database. 
+It converts restricted natural language employee queries into SQL SELECT statements.
+
+Database
+The system targets a fixed employee table with columns:
+id, name, department, salary, hire_date, city, age
+
+Sample data is provided in database/employees.csv.
+
+Approach
+The converter uses simple rule-based parsing. It cleans and standardizes the user input, checks that 
+the command matches the expected pattern, extracts any filter conditions, verifies the column names against 
+the employee schema, and then builds the corresponding SQL query.
+
+Supported Query Structure
+The system supports natural language queries of the form:
+
+show employees  
+show employees where column op value  
+show employees where column op value and column op value  
+
+Supported Operators
+is  → equality  
+=   → equality  
+>   → greater than  
+<   → less than  
+
+Features Implemented
+- Employee listing queries
+- WHERE clause parsing
+- Multiple conditions using AND
+- Column validation against schema
+- Numeric vs text value handling
+- SQL query construction
+
+Example Conversions
+Input: show employees  
+Output: SELECT * FROM employees;
+
+Input: show employees where salary > 50000  
+Output: SELECT * FROM employees WHERE salary > 50000;
+
+Input: show employees where department = sales and city = chennai  
+Output: SELECT * FROM employees WHERE department = 'sales' AND city = 'chennai';

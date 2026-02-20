@@ -17,9 +17,12 @@ Supported Queries
 show employees  
 show employees where column op value  
 show employees where column op value and column op value  
-show employees order by column [asc|desc]
+show employees order by column [asc|desc]  
+show employees where ... order by ...
 
-Operators supported: is, =, >, <
+Operators Supported
+is, =, >, <, >=, <=, !=  
+Natural forms: not, is not
 
 Processing Steps
 1. Normalize input (lowercase, clean spaces)

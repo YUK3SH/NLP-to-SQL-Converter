@@ -22,8 +22,8 @@ def parse_nlp_to_sql(user_input):
         if column not in valid_columns:
             return f"Error: column '{column}' not found"
 
-        if operator not in ["is", "="]:
-            return "Error: use 'is' or '='"
+        if operator not in ["is", "=", ">", "<"]:
+            return "Error: use 'is', '=', '>', or '<'"
 
         # simple numeric vs text
         if value.isdigit():
@@ -31,13 +31,13 @@ def parse_nlp_to_sql(user_input):
         else:
             sql_value = f"'{value}'"
 
-        return f"SELECT * FROM employees WHERE {column} = {sql_value};"
+        sql_op = "=" if operator == "is" else operator
+        return f"SELECT * FROM employees WHERE {column} {sql_op} {sql_value};"
 
     if user_input == "show employees":
         return "SELECT * FROM employees;"
 
     return "Error: invalid command"
-
 
 def main():
     print("NLP to SQL Converter")
@@ -54,7 +54,6 @@ def main():
 
         sql_output = parse_nlp_to_sql(user_input)
         print(sql_output)
-
 
 if __name__ == "__main__":
     main()

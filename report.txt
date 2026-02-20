@@ -1,47 +1,36 @@
 NLP to SQL Converter
 
 Overview
-This project implements a rule-based Natural Language to SQL converter for a dedicated employee database. 
-It converts restricted natural language employee queries into SQL SELECT statements.
+This project converts restricted natural language employee queries into SQL SELECT statements for a fixed employee database.
 
 Database
-The system targets a fixed employee table with columns:
+The system targets a dedicated employee table with columns:
 id, name, department, salary, hire_date, city, age
 
-Sample data is provided in database/employees.csv.
+Sample data is available in database/employees.csv.
 
-Approach
-The converter uses simple rule-based parsing. It cleans and standardizes the user input, checks that 
-the command matches the expected pattern, extracts any filter conditions, verifies the column names against 
-the employee schema, and then builds the corresponding SQL query.
+How It Works
+The converter uses simple rule-based parsing.  
+It normalizes the input text, checks that the command matches the expected pattern, extracts any filter conditions, validates column names against the employee schema, and builds the corresponding SQL query.
 
-Supported Query Structure
-The system supports natural language queries of the form:
-
+Supported Queries
 show employees  
 show employees where column op value  
 show employees where column op value and column op value  
+show employees order by column [asc|desc]
 
-Supported Operators
-is  → equality  
-=   → equality  
->   → greater than  
-<   → less than  
+Operators supported: is, =, >, <
 
-Features Implemented
-- Employee listing queries
-- WHERE clause parsing
-- Multiple conditions using AND
-- Column validation against schema
-- Numeric vs text value handling
-- SQL query construction
+Processing Steps
+1. Normalize input (lowercase, clean spaces)
+2. Detect base command (show employees)
+3. Parse WHERE conditions (if present)
+4. Validate column names
+5. Parse ORDER BY (if present)
+6. Construct final SQL
 
-Example Conversions
-Input: show employees  
-Output: SELECT * FROM employees;
-
-Input: show employees where salary > 50000  
-Output: SELECT * FROM employees WHERE salary > 50000;
-
-Input: show employees where department = sales and city = chennai  
-Output: SELECT * FROM employees WHERE department = 'sales' AND city = 'chennai';
+Design Choices
+- Fixed schema for predictable parsing
+- Rule-based logic (no external NLP libraries)
+- Column validation to prevent invalid SQL
+- Supports filtering and sorting in natural language

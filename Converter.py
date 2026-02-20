@@ -28,16 +28,20 @@ def parse_nlp_to_sql(user_input):
         sql_conditions = []
 
         for cond in conditions:
+            cond = cond.replace("is not", "!=")
             tokens = cond.strip().split()
             if len(tokens) != 3:
                 return "Error: use format column is value"
 
             column, operator, value = tokens
+            if operator == "not":
+                operator = "!="
+
             if column not in valid_columns:
                 return f"Error: column '{column}' not found"
 
-            if operator not in ["is", "=", ">", "<"]:
-                return "Error: use 'is', '=', '>', or '<'"
+            if operator not in ["is", "=", ">", "<", ">=", "<=", "!="]:
+                return "Error: use 'is', '=', '>', '<', '>=', '<=', or '!='"
 
             sql_value = value if value.isdigit() else f"'{value}'"
             sql_op = "=" if operator == "is" else operator
@@ -50,8 +54,9 @@ def parse_nlp_to_sql(user_input):
     return f"{sql_base}{where_clause}{order_query};"
 
 def main():
+    print("----------------------")
     print("NLP to SQL Converter")
-    print("Examples: show employees | show employees where department is sales")
+    print("----------------------")
 
     while True:
         try:

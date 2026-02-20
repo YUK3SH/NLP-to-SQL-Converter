@@ -1,101 +1,39 @@
-﻿# NLP to SQL Converter
-
-
+# NLP to SQL Converter
 
 This project converts restricted natural language employee queries into SQL SELECT statements for a fixed employee database.
-
-
 
 ## Database
 
 The system is designed for a dedicated employee table with the following columns:
 
-id, name, department, salary, hire\_date, city, age
-
-
+id, name, department, salary, hire_date, city, age  
 
 Sample data is provided in `database/employees.csv`.
-
-
 
 ## Run Instructions
 
 Ensure Python is installed, then run:
 
-
-
-python Converter.py
-
-
+`python Converter.py`
 
 Enter queries in the console. Type `exit` to quit.
-
-
 
 ## Project Scope
 
 The converter supports natural language employee retrieval queries and converts them into SQL SELECT statements with optional filtering and sorting.
 
+## Supported Features
 
-
-Supported features:
-
-\- Basic employee listing
-
-\- WHERE clause filtering
-
-\- Comparison operators: is, =, >, <
-
-\- Multiple conditions using AND
-
-\- ORDER BY with ASC/DESC
-
-\- Column validation against schema
-
-\- Automatic handling of numeric and text values
+- Basic employee listing  
+- WHERE clause filtering  
+- Comparison operators: is, =, >, <, >=, <=, !=  
+- Natural inequality: not, is not  
+- Multiple conditions using AND  
+- ORDER BY with ASC/DESC  
+- Column validation against schema  
+- Automatic handling of numeric and text values  
 
 
 
 ## Examples
-
-
-
-Input:
-
-show employees  
-
-Output:
-
-SELECT \* FROM employees;
-
-
-
-Input:
-
-show employees where salary > 50000  
-
-Output:
-
-SELECT \* FROM employees WHERE salary > 50000;
-
-
-
-Input:
-
-show employees where department = sales and city = chennai  
-
-Output:
-
-SELECT \* FROM employees WHERE department = 'sales' AND city = 'chennai';
-
-
-
-Input:
-
-show employees order by salary desc  
-
-Output:
-
-SELECT \* FROM employees ORDER BY salary DESC;
-
-
+<img width="944" height="381" alt="Examples" src="https://github.com/user-attachments/assets/631bc262-2a08-4226-a64e-35930bdc0963" />

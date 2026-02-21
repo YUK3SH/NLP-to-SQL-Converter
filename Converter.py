@@ -71,21 +71,21 @@ def parse_nlp_to_sql(user_input):
     return f"{sql_base}{where_clause}{order_query};"
 
 def main():
-    print("----------------------")
+    print("------------------------")
     print("NLP to SQL Converter")
-    print("----------------------")
+    print("-------------------------")
 
     while True:
         try:
-            user_input = input(">> ")
+            user_input = input("\n>> ")
         except EOFError:
             break
 
         if user_input.lower() == "exit":
             break
 
-        sql_output = parse_nlp_to_sql(user_input)
-        print(sql_output)
+        if user_input.strip():
+            print(parse_nlp_to_sql(user_input))
 
 if __name__ == "__main__":
     main()

@@ -21,31 +21,42 @@ def parse_nlp_to_sql(user_input):
 
     if " where " in user_input:
         parts = user_input.split(" where ")
-        if len(parts) != 2:
-            return "Error: only one where supported"
+        if len(parts) != 2: return "Error: only one where supported"
 
-        conditions = parts[1].strip().split(" and ")
+        # Token-based parsing to handle BETWEEN and AND correctly
+        where_text = parts[1].strip().replace("is not ", "not ")
+        where_tokens = where_text.split()
+        conditions, idx = [], 0
+        while idx < len(where_tokens):
+            if idx + 1 < len(where_tokens) and where_tokens[idx+1] == "between":
+                conditions.append(" ".join(where_tokens[idx:idx+5]))
+                idx += 5
+            else:
+                conditions.append(" ".join(where_tokens[idx:idx+3]))
+                idx += 3
+            if idx < len(where_tokens) and where_tokens[idx] == "and": idx += 1
+
         sql_conditions = []
-
         for cond in conditions:
-            cond = cond.replace("is not", "!=")
-            tokens = cond.strip().split()
-            if len(tokens) != 3:
-                return "Error: use format column is value"
-
-            column, operator, value = tokens
-            if operator == "not":
-                operator = "!="
-
-            if column not in valid_columns:
-                return f"Error: column '{column}' not found"
-
-            if operator not in ["is", "=", ">", "<", ">=", "<=", "!="]:
-                return "Error: use 'is', '=', '>', '<', '>=', '<=', or '!='"
-
-            sql_value = value if value.isdigit() else f"'{value}'"
-            sql_op = "=" if operator == "is" else operator
-            sql_conditions.append(f"{column} {sql_op} {sql_value}")
+            if "between" in cond:
+                tokens = cond.split()
+                if len(tokens) != 5: return "Error: invalid between format"
+                col, _, v1, _, v2 = tokens
+                if col not in valid_columns: return f"Error: column '{col}' not found"
+                v1,v2 = [v if v.isdigit() else f"'{v}'" for v in [v1, v2]]
+                sql_conditions.append(f"{col} BETWEEN {v1} AND {v2}")
+            else:
+                cond = cond.replace("is not", "!=")
+                tokens = cond.split()
+                if len(tokens) != 3: return "Error: use format column is value"
+                col, op, val = tokens
+                if op == "not": op = "!="
+                if col not in valid_columns: return f"Error: column '{col}' not found"
+                if op not in ["is", "=", ">", "<", ">=", "<=", "!="]:
+                    return "Error: use 'is', '=', '>', '<', '>=', '<=', or '!='"
+                sql_val = val if val.isdigit() else f"'{val}'"
+                sql_op = "=" if op == "is" else op
+                sql_conditions.append(f"{col} {sql_op} {sql_val}")
 
         where_clause = f" WHERE {' AND '.join(sql_conditions)}"
     elif user_input != "show employees":
